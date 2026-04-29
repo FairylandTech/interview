@@ -1,5 +1,5 @@
 cryptography==46.0.3
-django==5.2.9
+django==5.2.13
 orjson==3.11.8
 pydantic==2.12.5
 pymysql==1.1.2
