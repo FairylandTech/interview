@@ -49,8 +49,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     ### apps ###
     "apps.host.apps.HostConfig",
-    ### integrated ###
-    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
