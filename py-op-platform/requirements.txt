@@ -1,4 +1,4 @@
-cryptography==46.0.3
+cryptography==46.0.7
 django==5.2.9
 orjson==3.11.8
 pydantic==2.12.5
