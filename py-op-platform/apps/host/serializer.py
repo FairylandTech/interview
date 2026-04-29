@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import typing as t
 
+import ipaddress
+
 from apps.host.models import HostMachineModel, HostRegionModel, HostRoomModel
 
 
@@ -20,7 +22,7 @@ class HostMachineSerializer:
         return {
             "id": machine.id,
             "hostName": machine.hostname,
-            "ipv4": machine.ipv4,
+            "ipv4": str(ipaddress.ip_address(machine.ipv4)),
             "online": machine.online,
             "createdAt": machine.created_at.strftime("%Y-%m-%d %H:%M:%S") if machine.created_at else None,
             "updatedAt": machine.updated_at.strftime("%Y-%m-%d %H:%M:%S") if machine.updated_at else None,

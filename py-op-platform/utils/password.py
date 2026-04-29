@@ -126,5 +126,12 @@ class PasswordUtils:
 
 
 if __name__ == "__main__":
-    secret_key = PasswordUtils.generate_encrypt_key()
-    print(secret_key)
+    # secret_key = PasswordUtils.generate_encrypt_key()
+    # print(secret_key)
+
+    passwd = "/hUg9=[^3cs5FkR%"
+    sk = "lvbxHa57M9BiD15yobDAOvQ9cTWwCLQ-0GgddWwfh4C="
+    en_passwd = PasswordUtils.encrypt_password(passwd, sk)
+
+    de_passwd = PasswordUtils.decrypt_password(en_passwd, sk)
+    print(de_passwd, de_passwd == passwd)

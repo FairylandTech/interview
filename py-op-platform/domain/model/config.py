@@ -38,4 +38,4 @@ class RedisConfig(DomainModelBase):
 class Config(DomainModelBase):
     database: dict[str, DatabaseConfig] = Field(dict(), description="数据库配置")
     redis: RedisConfig = Field(RedisConfig(), description="Redis 配置")
-    secret_key: str = Field("", "生成可逆加密密码的 Secret Key")
+    secret_key: str = Field("", description="生成可逆加密密码的 Secret Key")

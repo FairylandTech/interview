@@ -1,4 +1,6 @@
+import ipaddress
 import logging
+import subprocess
 
 import orjson
 from django.core.paginator import Paginator
@@ -74,7 +76,7 @@ class HostMachineView(View):
             return HTTPAPIResponse.build(code=400, message="请求体不合法").as_response
 
         hostname: str = body.get("hostName", "")
-        ipv4: int = int(body.get("ipv4", 0))
+        ipv4: str = body.get("ipv4", "")
         online: str = body.get("online", HostMachineModel.OnlineChoices.NO)
         room_id: int = int(body.get("roomId", 0))
 
@@ -92,7 +94,7 @@ class HostMachineView(View):
         machine = HostMachineModel.objects.create(
             hostname=hostname,
             password=PasswordUtils.encrypt_password(PasswordUtils.generate_password(), self.__SECRET_KEY),
-            ipv4=ipv4,
+            ipv4=int(ipaddress.ip_address(ipv4)),
             online=online,
             created_at=now,
             updated_at=now,
@@ -115,7 +117,7 @@ class HostMachineView(View):
 
         machine_id: int = int(body.get("id", "0"))
         hostname: str = body.get("hostName", "")
-        ipv4: int = int(body.get("ipv4", 0))
+        ipv4: str = body.get("ipv4", "")
         online: str = body.get("online", "")
         room_id: int = int(body.get("roomId", 0))
 
@@ -130,7 +132,7 @@ class HostMachineView(View):
             update_fields.append("hostname")
 
         if ipv4:
-            machine.ipv4 = ipv4
+            machine.ipv4 = int(ipaddress.ip_address(ipv4))
             update_fields.append("ipv4")
 
         if online:
@@ -372,9 +374,19 @@ class HostMachinePasswordView(View):
             logger.error(f"Error: {error}")
             return HTTPAPIResponse.build(code=500, message="主机密码解密失败").as_response
 
-        return HTTPAPIResponse.build(
-            data={
-                "id": machine.id,
-                "password": password,
-            }
-        ).as_response
+        return HTTPAPIResponse.build(data={"id": machine.id, "password": password}).as_response
+
+
+class HostMachinePingView(View):
+
+    def get(self, request: HttpRequest, host: str) -> HttpResponse:
+        try:
+            result = subprocess.run(["ping", "-n", "1", host], capture_output=True, text=True, timeout=10)
+            tag = result.returncode == 0
+        except subprocess.TimeoutExpired:
+            tag = False
+        except Exception as error:
+            logger.exception(error)
+            return HTTPAPIResponse.build(code=500, message="Ping执行失败").as_response
+
+        return HTTPAPIResponse.build(data={"result": tag, "metadata": {"ipv4": host}}).as_response
