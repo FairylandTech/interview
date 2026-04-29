@@ -1,0 +1,11 @@
+### Public ###
+.git
+.idea
+.vscode
+logs
+
+### python ###
+__pycache__
+
+### Configuration ###
+config.json
