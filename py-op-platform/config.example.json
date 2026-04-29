@@ -1,0 +1,18 @@
+{
+  "database": {
+    "default": {
+      "host": "",
+      "port": 0,
+      "username": "root",
+      "password": "",
+      "database": "py_op_platform"
+    }
+  },
+  "redis": {
+    "host": "",
+    "port": 6379,
+    "password": "",
+    "database": 0
+  },
+  "secret_key": ""
+}
